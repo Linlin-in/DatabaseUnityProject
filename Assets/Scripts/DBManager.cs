@@ -54,6 +54,10 @@ public class DBManager : MonoBehaviour
                 {
                     MainPageManager.Instance.StartMainPage();
                 }
+                else
+                {
+                    FeedBackText.Instance.SendFeedBack("Kullanıcı adı veya şifre yanlış");
+                }
             }
         }
 

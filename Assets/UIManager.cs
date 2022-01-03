@@ -30,6 +30,7 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
+
         CloseAllPages();
         
         LoginPage.SetActive(true);
