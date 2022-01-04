@@ -24,9 +24,41 @@ public class DBManager : MonoBehaviour
     #endregion
     */
     
+    public static string Username;
+    public static string Pswd;
+    
     void Start()
     {
-        //StartCoroutine(GetRequest("s"));
+        //StartCoroutine(StartGetLikes());
+    }
+
+    public static IEnumerator StartGetLikes()
+    {
+        string uri = "http://localhost/UnityGate/GetLikes.php/";
+        using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
+        {
+            // Request and wait for the desired page.
+            yield return webRequest.SendWebRequest();
+
+            string[] pages = uri.Split('/');
+            int page = pages.Length - 1;
+
+            switch (webRequest.result)
+            {
+                case UnityWebRequest.Result.ConnectionError:
+                case UnityWebRequest.Result.DataProcessingError:
+                    Debug.LogError(pages[page] + ": Error: " + webRequest.error);
+                    break;
+                case UnityWebRequest.Result.ProtocolError:
+                    Debug.LogError(pages[page] + ": HTTP Error: " + webRequest.error);
+                    break;
+                case UnityWebRequest.Result.Success:
+                    print(webRequest.downloadHandler.text);
+                    EventsPageManager.Instance.CalculateLikes(webRequest.downloadHandler.text);
+                    //EventsPageManager.Instance.OpenEventsPage(webRequest.downloadHandler.text.Split(':'));
+                    break;
+            }
+        }
     }
     
     public static IEnumerator StartGetCategories()
@@ -50,7 +82,7 @@ public class DBManager : MonoBehaviour
                     Debug.LogError(pages[page] + ": HTTP Error: " + webRequest.error);
                     break;
                 case UnityWebRequest.Result.Success:
-                    print(webRequest.downloadHandler.text);
+                    //print(webRequest.downloadHandler.text);
                     EventsPageManager.Instance.OpenEventsPage(webRequest.downloadHandler.text.Split(':'));
                     break;
             }
@@ -84,13 +116,37 @@ public class DBManager : MonoBehaviour
                 }
                 else
                 {
-                    FeedBackText.Instance.SendFeedBack("Kullanıcı adı veya şifre yanlış");
+                    FeedBackText.Instance.SendFeedBack("Wrong username or password");
                 }
             }
         }
-
     }
     
+    public static IEnumerator AddLike(WWWForm data)
+    {
+        using (UnityWebRequest request = UnityWebRequest.Post("http://localhost/UnityGate/AddLike.php/", data))
+        {
+            request.timeout = 5;
+
+            yield return request.SendWebRequest();
+
+            //already done
+            while (!request.isDone)
+            {
+                yield return new WaitForEndOfFrame();
+            }
+
+            if (request.result != UnityWebRequest.Result.Success)
+            {
+                Debug.LogError(request.error);
+            }
+            else
+            {
+                print("oldu");
+                EventsPageManager.Instance.StartGetLiesMethod();
+            }
+        }
+    }
     
     public static IEnumerator GetLocationWithCategoryData(WWWForm data)
     {
@@ -113,9 +169,7 @@ public class DBManager : MonoBehaviour
             }
             else
             {
-                
                 print(request.result);
-                
             }
         }
 
@@ -183,3 +237,5 @@ public class DBManager : MonoBehaviour
     
     
 }
+
+

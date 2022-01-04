@@ -27,7 +27,7 @@ public class MainPageManager : MonoBehaviour
     public void StartMainPage()
     {
         UIManager.Instance.OpenMainPage();
-        MainPageEnterText.text = "Hoşgeldin " + UserLoginManager.Instance.GetCurrentUsername() + ".";
+        MainPageEnterText.text = "Hello " + UserLoginManager.Instance.GetCurrentUsername() + ".";
     }
 
     public void OpenCategories()

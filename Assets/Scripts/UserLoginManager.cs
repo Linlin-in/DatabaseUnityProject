@@ -34,8 +34,10 @@ public class UserLoginManager : MonoBehaviour
         WWWForm data = new WWWForm();
         data.AddField("username", UserName.text);
         data.AddField("pswd", Password.text);
-
+        
         lastEnteredUserName = UserName.text;
+        DBManager.Username = lastEnteredUserName;
+        DBManager.Pswd = Password.text;
         
         StartCoroutine(DBManager.LogInCoroutine(data));
         
