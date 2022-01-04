@@ -27,17 +27,18 @@ public class UIManager : MonoBehaviour
     public GameObject LoginPage;
     public GameObject SignUpPage;
     public GameObject MainPage;
+    public GameObject CategoryPage;
 
     private void Start()
     {
-
         CloseAllPages();
         
         LoginPage.SetActive(true);
     }
     
-    private void CloseAllPages()
+    public void CloseAllPages()
     {
+        CategoryPage.SetActive(false);
         MainPage.SetActive(false);
         LoginPage.SetActive(false);
         SignUpPage.SetActive(false);
